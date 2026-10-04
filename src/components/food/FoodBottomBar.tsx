@@ -5,25 +5,32 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 
 interface FoodBottomBarProps {
   selectedCount: number;
+  maxCount?: number;
   isSubmitting: boolean;
   onConfirm: () => void;
 }
 
 export default function FoodBottomBar({
   selectedCount,
+  maxCount = 3,
   isSubmitting,
   onConfirm,
 }: FoodBottomBarProps) {
   const hasSelection = selectedCount > 0;
+  const isMaxReached = selectedCount >= maxCount;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 p-4 max-w-md mx-auto bg-gradient-to-t from-white via-white/95 to-transparent backdrop-blur-md z-30">
       <div className="flex items-center justify-between text-xs text-gray-500 mb-2 px-1 font-medium">
         <span>
-          Seleccionadas: <strong className="text-rose-600">{selectedCount}</strong>
+          Seleccionadas: <strong className="text-rose-600">{selectedCount} de {maxCount}</strong>
         </span>
         {!hasSelection ? (
           <span className="text-rose-400">Elige al menos 1</span>
+        ) : isMaxReached ? (
+          <span className="text-amber-600 font-bold flex items-center gap-1">
+            <Sparkles className="w-3.5 h-3.5" /> ¡Top {maxCount} completo!
+          </span>
         ) : (
           <span className="text-emerald-600 font-semibold flex items-center gap-1">
             <Sparkles className="w-3.5 h-3.5" /> ¡Antojo perfecto!

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FOOD_OPTIONS } from '@/constants/food';
 import FoodHeader from './food/FoodHeader';
 import FoodCard from './food/FoodCard';
@@ -13,10 +14,13 @@ interface FoodPickerStepProps {
   onConfirmed: (selectedFoods: string[]) => void;
 }
 
+const MAX_FOODS = 3;
+
 export default function FoodPickerStep({ sessionId, nickname, onConfirmed }: FoodPickerStepProps) {
   const [selected, setSelected] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [showScrollHint, setShowScrollHint] = useState<boolean>(true);
+  const [showLimitNotice, setShowLimitNotice] = useState<boolean>(false);
   const endOfListRef = useRef<HTMLDivElement | null>(null);
 
   // Ocultar el indicador flotante cuando las últimas opciones / final del menú ya estén en pantalla
@@ -73,9 +77,19 @@ export default function FoodPickerStep({ sessionId, nickname, onConfirmed }: Foo
   };
 
   const toggleFood = (name: string) => {
-    setSelected((prev) =>
-      prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
-    );
+    setSelected((prev) => {
+      if (prev.includes(name)) {
+        setShowLimitNotice(false);
+        return prev.filter((item) => item !== name);
+      }
+      if (prev.length >= MAX_FOODS) {
+        setShowLimitNotice(true);
+        setTimeout(() => setShowLimitNotice(false), 2500);
+        return prev;
+      }
+      setShowLimitNotice(false);
+      return [...prev, name];
+    });
   };
 
   const handleConfirm = async () => {
@@ -101,6 +115,21 @@ export default function FoodPickerStep({ sessionId, nickname, onConfirmed }: Foo
       {/* 1. Header */}
       <FoodHeader totalOptions={FOOD_OPTIONS.length} nickname={nickname} />
 
+      {/* Aviso amigable cuando intenta superar el límite */}
+      <AnimatePresence>
+        {showLimitNotice && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.95 }}
+            className="mb-3 p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold text-center shadow-sm flex items-center justify-center gap-1.5"
+          >
+            <span>🎯</span>
+            <span>¡Máximo {MAX_FOODS} antojos! Desmarca uno si deseas cambiarlo 😉</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* 2. Grid de opciones */}
       <div className="grid grid-cols-2 gap-3.5 flex-1 content-start">
         {FOOD_OPTIONS.map((item, index) => (
@@ -109,6 +138,7 @@ export default function FoodPickerStep({ sessionId, nickname, onConfirmed }: Foo
             item={item}
             index={index}
             isSelected={selected.includes(item.name)}
+            isDisabled={selected.length >= MAX_FOODS && !selected.includes(item.name)}
             onToggle={toggleFood}
           />
         ))}
@@ -128,6 +158,7 @@ export default function FoodPickerStep({ sessionId, nickname, onConfirmed }: Foo
       {/* 4. Barra de acción inferior fija */}
       <FoodBottomBar
         selectedCount={selected.length}
+        maxCount={MAX_FOODS}
         isSubmitting={isSubmitting}
         onConfirm={handleConfirm}
       />

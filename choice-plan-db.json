@@ -3405,5 +3405,81 @@
     "meetingDate": "Sábado 10 de octubre",
     "meetingTime": "8:30 PM",
     "meetingLocation": "Mi casa"
+  },
+  {
+    "sessionId": "cbf09e57-045d-4606-affe-88f678af81d6",
+    "attemptsCount": 1,
+    "choicesHistory": [
+      {
+        "choice": "attempt-no",
+        "timestamp": "2026-10-04T10:23:28.158Z"
+      },
+      {
+        "choice": "yes",
+        "timestamp": "2026-10-04T10:23:30.264Z"
+      }
+    ],
+    "selectedFoods": [
+      "Pizza Artesanal"
+    ],
+    "createdAt": "2026-10-04T10:23:28.157Z",
+    "updatedAt": "2026-10-04T10:23:35.004Z",
+    "yesAcceptedAt": "2026-10-04T10:23:30.264Z",
+    "meetingDate": "Sábado 10 de octubre",
+    "meetingTime": "8:30 PM",
+    "meetingLocation": "Mi casa"
+  },
+  {
+    "sessionId": "6d34743e-8fb4-4d99-b3c9-03141c88f26b",
+    "attemptsCount": 3,
+    "choicesHistory": [
+      {
+        "choice": "attempt-no",
+        "timestamp": "2026-10-04T10:25:05.920Z"
+      },
+      {
+        "choice": "attempt-no",
+        "timestamp": "2026-10-04T10:25:06.607Z"
+      },
+      {
+        "choice": "attempt-no",
+        "timestamp": "2026-10-04T10:25:07.161Z"
+      },
+      {
+        "choice": "yes",
+        "timestamp": "2026-10-04T10:25:08.017Z"
+      }
+    ],
+    "selectedFoods": [
+      "Comida Marina",
+      "Alta Cocina",
+      "Makis"
+    ],
+    "createdAt": "2026-10-04T10:25:05.919Z",
+    "updatedAt": "2026-10-04T10:49:49.346Z",
+    "yesAcceptedAt": "2026-10-04T10:25:08.017Z",
+    "meetingDate": "Domingo 18 de octubre",
+    "meetingTime": "8:30 PM",
+    "meetingLocation": "Mi casa"
+  },
+  {
+    "sessionId": "6fe8283e-39dc-4091-b01d-a01cd6262ccc",
+    "attemptsCount": 0,
+    "choicesHistory": [
+      {
+        "choice": "yes",
+        "timestamp": "2026-10-04T10:49:57.665Z"
+      },
+      {
+        "choice": "yes",
+        "timestamp": "2026-10-04T10:56:17.257Z"
+      }
+    ],
+    "selectedFoods": [
+      "Parrillas"
+    ],
+    "createdAt": "2026-10-04T10:49:57.664Z",
+    "updatedAt": "2026-10-04T10:56:19.393Z",
+    "yesAcceptedAt": "2026-10-04T10:56:17.257Z"
   }
 ]

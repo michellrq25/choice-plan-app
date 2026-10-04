@@ -24,7 +24,7 @@ export default function FoodHeader({ totalOptions = 12, nickname }: FoodHeaderPr
         {nickname ? `${nickname}, ¿qué te provoca comer? 😋` : '¿Qué te provoca comer? 😋'}
       </h2>
       <p className="text-xs text-gray-600 mt-1 flex items-center justify-center gap-1">
-        <span>Elige todas las que quieras • Desliza hacia abajo</span>
+        <span>Elige hasta 3 antojos favoritos • Desliza hacia abajo</span>
         <ChevronDown className="w-3.5 h-3.5 text-rose-500 inline animate-bounce" />
       </p>
     </motion.div>

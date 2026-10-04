@@ -27,7 +27,7 @@ export default function DateTimeBottomBar({
       <div className="flex flex-col gap-0.5 text-xs text-gray-600 mb-2 px-3 py-1.5 font-medium bg-rose-50/60 rounded-xl border border-rose-100/60">
         <div className="flex items-center justify-between">
           <span>
-            📅 Día: <strong className="text-rose-600">{finalDate}</strong>
+            📅 Día: <strong className="text-rose-600">{finalDate || 'Elige fecha válida'}</strong>
           </span>
           <span>
             🕒 Hora: <strong className="text-rose-600">{finalTime}</strong>
@@ -55,6 +55,8 @@ export default function DateTimeBottomBar({
       >
         {isSubmitting ? (
           <span>Guardando coordinación...</span>
+        ) : !finalDate ? (
+          <span>Elige una fecha válida en el calendario</span>
         ) : !isLocationValid ? (
           <span>Indica el punto de encuentro</span>
         ) : (

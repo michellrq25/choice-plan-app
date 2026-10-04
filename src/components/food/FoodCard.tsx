@@ -9,10 +9,11 @@ interface FoodCardProps {
   item: FoodOption;
   index: number;
   isSelected: boolean;
+  isDisabled?: boolean;
   onToggle: (name: string) => void;
 }
 
-export default function FoodCard({ item, index, isSelected, onToggle }: FoodCardProps) {
+export default function FoodCard({ item, index, isSelected, isDisabled, onToggle }: FoodCardProps) {
   return (
     <motion.button
       type="button"
@@ -23,6 +24,8 @@ export default function FoodCard({ item, index, isSelected, onToggle }: FoodCard
       className={`relative flex flex-col items-start p-3.5 rounded-2xl text-left border-2 transition-all duration-200 active:scale-95 shadow-sm touch-manipulation select-none ${
         isSelected
           ? 'bg-rose-50/90 border-rose-500 ring-2 ring-rose-300/40 shadow-rose-200/50'
+          : isDisabled
+          ? 'bg-white/50 border-gray-100 opacity-50 hover:border-gray-200'
           : 'bg-white/85 border-white hover:border-rose-200 shadow-gray-200/50'
       }`}
     >
