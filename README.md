@@ -29,10 +29,10 @@ Una aplicación web interactiva, fresca y divertida pensada para invitar a salir
 - **Selector táctil de horario:** Opciones populares (*1:30 PM*, *4:00 PM*, *7:30 PM*, *8:30 PM*, *9:00 PM*) u horario personalizado.
 - **Lugar de recogida:** Campo opcional para que indique dónde pasar a recogerla (*Casa, Miraflores, San Isidro...*).
 
-### 5. Paso 4: Pantalla Final y Confirmación por WhatsApp:
+### 5. Paso 4: Pantalla Final y Confirmación por Telegram:
 - Ráfaga de confeti festivo.
 - Resumen completo: Día, Hora, Lugar de recogida, Antojos elegidos y contador de escapes.
-- **Botón de WhatsApp:** Genera automáticamente el mensaje completo listo para enviar:
+- **Botón / Confirmación por Telegram:** Genera y comparte automáticamente el mensaje completo listo para enviar:
   `"¡Quedó listo el plan! 😎 Pasas por mí el Sábado a las 8:30 PM, y vamos a comer Makis, Comida Marina... ¡Nos vemos! ✨"`
 
 ### 6. Backend & Endpoints:
