@@ -24,7 +24,6 @@ export default function ProposalStep({ sessionId, nickname, fullName, onAccepted
     noPosition,
     poof,
     setPoof,
-    showBubble,
     noButtonText,
     noButtonRef,
     yesButtonRef,
@@ -82,13 +81,12 @@ export default function ProposalStep({ sessionId, nickname, fullName, onAccepted
       {/* 💨 Nube de humo cuando el botón se teletransporta */}
       <PoofEffect poof={poof} onAnimationComplete={() => setPoof(null)} />
 
-      {/* ⚡ Botón NO evasivo con aura y bocadillo cómico inteligente */}
+      {/* ⚡ Botón NO evasivo con aura */}
       {noPosition.isEvading && (
         <EscapingNoButton
           ref={noButtonRef}
           position={noPosition}
           attempts={attempts}
-          showBubble={showBubble}
           text={noButtonText}
           onEvade={triggerEvade}
         />

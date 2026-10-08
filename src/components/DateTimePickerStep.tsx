@@ -50,7 +50,7 @@ export default function DateTimePickerStep({
     const el = containerRef.current;
     if (!el) return;
     const distanceToBottom = el.scrollHeight - (el.scrollTop + el.clientHeight);
-    setShowScrollHint(distanceToBottom > 45);
+    setShowScrollHint(distanceToBottom > 75);
   };
 
   useEffect(() => {
@@ -95,7 +95,8 @@ export default function DateTimePickerStep({
   const formattedCustomDate = customDate ? formatReadableDate(customDate) : '';
   const finalDate = isCustomDate ? formattedCustomDate : selectedDate;
   const finalTime = isCustomTime && customTime ? customTime : selectedTime;
-  const finalLocation = pickupAtHome ? DEFAULT_PICKUP_LOCATION : customLocation.trim() || undefined;
+  const defaultPickup = nickname ? `Paso por tu casa, ${nickname}` : DEFAULT_PICKUP_LOCATION;
+  const finalLocation = pickupAtHome ? defaultPickup : customLocation.trim() || undefined;
   const isLocationValid = pickupAtHome || customLocation.trim().length > 0;
 
   const handleConfirm = async () => {
@@ -147,10 +148,21 @@ export default function DateTimePickerStep({
           formattedCustomDate={formattedCustomDate}
           onSelectQuickDate={(fullDate) => {
             setIsCustomDate(false);
+            setCustomDate('');
             setSelectedDate(fullDate);
           }}
           onToggleCustomDate={() => setIsCustomDate(!isCustomDate)}
-          onCustomDateChange={setCustomDate}
+          onCustomDateChange={(iso) => {
+            setCustomDate(iso);
+            if (iso) {
+              setSelectedDate(formatReadableDate(iso));
+            }
+          }}
+          onConfirmValidCustomDate={(isoDate) => {
+            setCustomDate(isoDate);
+            setSelectedDate(formatReadableDate(isoDate));
+            setIsCustomDate(false); // Cierra automáticamente el calendario
+          }}
         />
 
         {/* Card 2: Hora */}
@@ -160,10 +172,16 @@ export default function DateTimePickerStep({
           isCustomTime={isCustomTime}
           onSelectQuickTime={(timeLabel) => {
             setIsCustomTime(false);
+            setCustomTime('');
             setSelectedTime(timeLabel);
           }}
           onToggleCustomTime={() => setIsCustomTime(!isCustomTime)}
           onCustomTimeChange={setCustomTime}
+          onConfirmCustomTime={(timeLabel) => {
+            setCustomTime(timeLabel);
+            setSelectedTime(timeLabel);
+            setIsCustomTime(false); // Cierra automáticamente el selector de hora
+          }}
         />
 
         {/* Card 3: Punto de encuentro */}

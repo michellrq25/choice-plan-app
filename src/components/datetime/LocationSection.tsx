@@ -20,54 +20,36 @@ export default function LocationSection({
   onCustomLocationChange,
 }: LocationSectionProps) {
   return (
-    <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-2.5 sm:p-3 border border-rose-100/80 shadow-xs">
-      <div className="flex items-center gap-1.5 mb-2 text-xs font-bold text-gray-800">
+    <div className="bg-white/90 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-rose-100/80 shadow-xs">
+      <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold text-gray-800">
         <MapPin className="w-3.5 h-3.5 text-rose-500" />
-        <span>
-          {nickname
-            ? `3. ¿Deseas que pase a recogerte a tu casa, ${nickname}?`
-            : '3. ¿Deseas que pase a recogerte en tu casa?'}
-        </span>
+        <span>3. Punto de encuentro</span>
       </div>
 
-      {/* Radio button options */}
-      <div className="grid grid-cols-2 gap-2">
+      {/* Segmented Control fluido estilo Apple */}
+      <div className="grid grid-cols-2 p-0.5 bg-rose-50/70 rounded-lg border border-rose-200/70 gap-1 shadow-inner">
         <button
           type="button"
           onClick={() => onSetPickupAtHome(true)}
-          className={`flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-xl border text-[11px] sm:text-xs font-semibold transition-all active:scale-95 ${
+          className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-bold transition-all active:scale-95 ${
             pickupAtHome
-              ? 'bg-rose-50 border-rose-500 text-rose-700 ring-2 ring-rose-200 font-bold shadow-xs'
-              : 'bg-white border-gray-200 text-gray-600 hover:border-rose-200'
+              ? 'bg-white text-rose-700 shadow-2xs border border-rose-200/80 font-black'
+              : 'text-gray-500 hover:text-gray-800 font-medium'
           }`}
         >
-          <span
-            className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${
-              pickupAtHome ? 'border-rose-500 bg-rose-500' : 'border-gray-300 bg-white'
-            }`}
-          >
-            {pickupAtHome && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
-          </span>
-          <span className="whitespace-nowrap">Sí, en mi casa 🏡</span>
+          <span>🏡 Pasa por mi casa</span>
         </button>
 
         <button
           type="button"
           onClick={() => onSetPickupAtHome(false)}
-          className={`flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-xl border text-[11px] sm:text-xs font-semibold transition-all active:scale-95 ${
+          className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-bold transition-all active:scale-95 ${
             !pickupAtHome
-              ? 'bg-rose-50 border-rose-500 text-rose-700 ring-2 ring-rose-200 font-bold shadow-xs'
-              : 'bg-white border-gray-200 text-gray-600 hover:border-rose-200'
+              ? 'bg-white text-rose-700 shadow-2xs border border-rose-200/80 font-black'
+              : 'text-gray-500 hover:text-gray-800 font-medium'
           }`}
         >
-          <span
-            className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${
-              !pickupAtHome ? 'border-rose-500 bg-rose-500' : 'border-gray-300 bg-white'
-            }`}
-          >
-            {!pickupAtHome && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
-          </span>
-          <span className="whitespace-nowrap">No, otro lugar 📍</span>
+          <span>📍 En otro punto</span>
         </button>
       </div>
 

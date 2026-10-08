@@ -111,7 +111,7 @@ export default function FoodPickerStep({ sessionId, nickname, onConfirmed }: Foo
   };
 
   return (
-    <div className="min-h-[100dvh] w-full flex flex-col justify-between max-w-md mx-auto px-4 pt-6 pb-40 relative touch-pan-y">
+    <div className="min-h-[100dvh] w-full flex flex-col justify-between max-w-md mx-auto px-3.5 sm:px-4 pt-3.5 sm:pt-4 pb-36 relative touch-pan-y">
       {/* 1. Header */}
       <FoodHeader totalOptions={FOOD_OPTIONS.length} nickname={nickname} />
 
@@ -122,7 +122,7 @@ export default function FoodPickerStep({ sessionId, nickname, onConfirmed }: Foo
             initial={{ opacity: 0, y: -8, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.95 }}
-            className="mb-3 p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold text-center shadow-sm flex items-center justify-center gap-1.5"
+            className="mb-2.5 p-2 rounded-xl bg-amber-50/90 border border-amber-200 text-amber-800 text-xs font-semibold text-center shadow-xs flex items-center justify-center gap-1.5"
           >
             <span>🎯</span>
             <span>¡Máximo {MAX_FOODS} antojos! Desmarca uno si deseas cambiarlo 😉</span>
@@ -131,7 +131,7 @@ export default function FoodPickerStep({ sessionId, nickname, onConfirmed }: Foo
       </AnimatePresence>
 
       {/* 2. Grid de opciones */}
-      <div className="grid grid-cols-2 gap-3.5 flex-1 content-start">
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-3 flex-1 content-start">
         {FOOD_OPTIONS.map((item, index) => (
           <FoodCard
             key={item.id}

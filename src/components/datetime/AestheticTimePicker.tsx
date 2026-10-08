@@ -7,6 +7,7 @@ import { Clock, Plus, Minus, Check, Sparkles } from 'lucide-react';
 interface AestheticTimePickerProps {
   value: string; // e.g. '8:30 PM'
   onChange: (formattedTime: string) => void;
+  onConfirm?: (formattedTime: string) => void;
 }
 
 const QUICK_CHIPS = [
@@ -17,7 +18,7 @@ const QUICK_CHIPS = [
   { label: '10:00 PM', desc: 'After hours 🌙' },
 ];
 
-export default function AestheticTimePicker({ value, onChange }: AestheticTimePickerProps) {
+export default function AestheticTimePicker({ value, onChange, onConfirm }: AestheticTimePickerProps) {
   // Parsear valor inicial o usar 8:30 PM por defecto
   const parseTime = (timeStr: string) => {
     const match = timeStr?.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
@@ -89,6 +90,9 @@ export default function AestheticTimePicker({ value, onChange }: AestheticTimePi
     setMinute(parsed.m);
     setPeriod(parsed.p);
     onChange(chipLabel);
+    if (onConfirm) {
+      setTimeout(() => onConfirm(chipLabel), 300);
+    }
   };
 
   const currentTimeFormatted = `${hour}:${String(minute).padStart(2, '0')} ${period}`;
@@ -229,21 +233,17 @@ export default function AestheticTimePicker({ value, onChange }: AestheticTimePi
         </div>
       </div>
 
-      {/* 4. Resumen de la hora configurada */}
-      <motion.div
-        key={currentTimeFormatted}
-        initial={{ opacity: 0, y: 3 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mt-1.5 pt-1.5 border-t border-rose-100 flex items-center justify-between text-[10px]"
-      >
-        <div className="flex items-center gap-1 text-rose-700 font-bold">
-          <Check className="w-3 h-3 text-emerald-500 stroke-[3]" />
-          <span>Hora elegida: <strong>{currentTimeFormatted}</strong></span>
-        </div>
-        <span className="text-[8px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full flex items-center gap-0.5 border border-emerald-200/60">
-          <Sparkles className="w-2.5 h-2.5" /> Lista
-        </span>
-      </motion.div>
+      {/* 4. Botón de confirmación para cerrar y guardar hora */}
+      <div className="mt-2 pt-2 border-t border-rose-100 flex flex-col gap-1.5">
+        <button
+          type="button"
+          onClick={() => onConfirm?.(currentTimeFormatted)}
+          className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 hover:from-rose-600 hover:to-pink-600 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-all active:scale-[0.98] cursor-pointer"
+        >
+          <Check className="w-3.5 h-3.5 stroke-[3]" />
+          <span>Confirmar hora ({currentTimeFormatted})</span>
+        </button>
+      </div>
     </div>
   );
 }

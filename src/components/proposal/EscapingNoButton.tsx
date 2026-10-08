@@ -1,24 +1,20 @@
 'use client';
 
 import React, { forwardRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { getEscapeTaunt } from '@/constants/proposal';
+import { motion } from 'framer-motion';
 
 interface EscapingNoButtonProps {
   position: {
     x: number;
     y: number;
-    tauntAlign: 'left' | 'center' | 'right';
-    tauntVAlign: 'top' | 'bottom';
   };
   attempts: number;
-  showBubble: boolean;
   text: string;
   onEvade: (e: React.SyntheticEvent | Event) => void;
 }
 
 const EscapingNoButton = forwardRef<HTMLButtonElement, EscapingNoButtonProps>(
-  ({ position, attempts, showBubble, text, onEvade }, ref) => {
+  ({ position, attempts, text, onEvade }, ref) => {
     return (
       <motion.div
         key={`wrapper-${attempts}`}
@@ -38,56 +34,52 @@ const EscapingNoButton = forwardRef<HTMLButtonElement, EscapingNoButtonProps>(
         }}
         className="relative inline-block"
       >
-        {/* Shockwave expanding aura */}
+        {/* 1. Doble onda de choque expansiva concéntrica */}
+        {/* Onda 1: Rosa neón rápida */}
         <motion.span
-          key={`wave-${attempts}`}
-          initial={{ scale: 0.8, opacity: 1 }}
-          animate={{ scale: 2.4, opacity: 0 }}
+          key={`wave-rose-${attempts}`}
+          initial={{ scale: 0.75, opacity: 0.95 }}
+          animate={{ scale: 2.2, opacity: 0 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
           className="absolute -inset-1 rounded-2xl border-2 border-rose-400 pointer-events-none"
         />
+        {/* Onda 2: Dorada / Ámbar más amplia */}
+        <motion.span
+          key={`wave-amber-${attempts}`}
+          initial={{ scale: 0.65, opacity: 0.85 }}
+          animate={{ scale: 2.7, opacity: 0 }}
+          transition={{ duration: 0.65, delay: 0.07, ease: 'easeOut' }}
+          className="absolute -inset-1 rounded-2xl border-2 border-amber-300 pointer-events-none"
+        />
 
-        {/* Floating comic speech bubble - Auto-fades after ~3 seconds */}
-        <AnimatePresence>
-          {showBubble && (
-            <motion.div
-              key={`taunt-${attempts}`}
-              initial={{
-                opacity: 0,
-                y: position.tauntVAlign === 'bottom' ? -8 : 8,
-                scale: 0.6,
-                x: position.tauntAlign === 'center' ? '-50%' : 0,
-              }}
-              animate={{
-                opacity: 1,
-                y: position.tauntVAlign === 'bottom' ? 34 : -32,
-                scale: 1,
-                x: position.tauntAlign === 'center' ? '-50%' : 0,
-              }}
-              exit={{
-                opacity: 0,
-                scale: 0.75,
-                y: position.tauntVAlign === 'bottom' ? 16 : -16,
-                x: position.tauntAlign === 'center' ? '-50%' : 0,
-              }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
-              style={{
-                position: 'absolute',
-                ...(position.tauntVAlign === 'bottom'
-                  ? { bottom: -6, top: 'auto' }
-                  : { top: -6, bottom: 'auto' }),
-                ...(position.tauntAlign === 'left'
-                  ? { left: 4, right: 'auto' }
-                  : position.tauntAlign === 'right'
-                    ? { right: 4, left: 'auto' }
-                    : { left: '50%', right: 'auto' }),
-              }}
-              className="whitespace-nowrap bg-gray-900 text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow-xl border border-rose-400/80 flex items-center gap-1 pointer-events-none z-20 max-w-[calc(100vw-32px)]"
-            >
-              <span>{getEscapeTaunt(attempts)}</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* 2. Chispas mágicas de teletransporte (se dispersan hacia afuera al aterrizar) */}
+        {[
+          { icon: '✨', x: -50, y: -26, delay: 0 },
+          { icon: '⚡', x: 50, y: -24, delay: 0.03 },
+          { icon: '✨', x: -44, y: 26, delay: 0.06 },
+          { icon: '⭐', x: 46, y: 24, delay: 0.02 },
+          { icon: '✨', x: 0, y: -38, delay: 0.05 },
+          { icon: '✨', x: 0, y: 38, delay: 0.08 },
+        ].map((sp, idx) => (
+          <motion.span
+            key={`sparkle-${attempts}-${idx}`}
+            initial={{ opacity: 1, scale: 0.2, x: 0, y: 0 }}
+            animate={{
+              opacity: [1, 1, 0],
+              scale: [0.2, 1.25, 0.4],
+              x: sp.x,
+              y: sp.y,
+            }}
+            transition={{
+              duration: 0.55,
+              delay: sp.delay,
+              ease: 'easeOut',
+            }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none text-xs select-none z-10"
+          >
+            {sp.icon}
+          </motion.span>
+        ))}
 
         {/* Escaping Button with glowing neon aura */}
         <motion.button

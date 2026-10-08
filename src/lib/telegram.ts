@@ -86,7 +86,10 @@ export async function notifyFoodsConfirmed(foods: string[], name?: string) {
 export async function notifyMeetingCoordinated(session: UserSessionData, name?: string) {
   const targetName = name?.trim() || 'Ale';
   const foods = session.selectedFoods.length > 0 ? session.selectedFoods.join(', ') : 'No especificado';
-  const location = session.meetingLocation || 'Por coordinar';
+  const location =
+    !session.meetingLocation || session.meetingLocation.toLowerCase() === 'mi casa'
+      ? `Casa de ${targetName} (paso por ella 🚗)`
+      : session.meetingLocation;
 
   const message = [
     `🚗 <b>¡CITA COORDINADA CON ${targetName.toUpperCase()}!</b> 🥂✨`,

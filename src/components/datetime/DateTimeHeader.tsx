@@ -15,15 +15,15 @@ export default function DateTimeHeader({ nickname }: DateTimeHeaderProps) {
       animate={{ opacity: 1, y: 0 }}
       className="text-center pt-1"
     >
-      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-100 text-rose-700 border border-rose-200 shadow-xs mb-1">
+      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100/80 text-rose-700 border border-rose-200/60 shadow-2xs mb-1">
         <Car className="w-3 h-3 text-rose-500" />
         Paso 3 • La Coordinación
       </div>
-      <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight leading-snug">
-        {nickname ? `¿Qué día y hora paso por ti, ${nickname}? 🚗✨` : '¿Qué día y hora paso por ti? 🚗✨'}
+      <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight leading-tight">
+        {nickname ? `¿Cuándo nos vemos, ${nickname}? ✨` : '¿Cuándo nos vemos? ✨'}
       </h2>
-      <p className="text-[11px] text-gray-500">
-        Elige el mejor momento para salir a pasarla genial.
+      <p className="text-[11px] text-gray-500 font-medium mt-0.5">
+        Elige tu momento ideal para salir a pasarla genial.
       </p>
     </motion.div>
   );

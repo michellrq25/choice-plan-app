@@ -11,8 +11,6 @@ export interface NoPositionState {
   x: number;
   y: number;
   isEvading: boolean;
-  tauntAlign: 'left' | 'center' | 'right';
-  tauntVAlign: 'top' | 'bottom';
 }
 
 export function useButtonEvasion(sessionId: string) {
@@ -21,11 +19,8 @@ export function useButtonEvasion(sessionId: string) {
     x: 0,
     y: 0,
     isEvading: false,
-    tauntAlign: 'center',
-    tauntVAlign: 'top',
   });
   const [poof, setPoof] = useState<{ x: number; y: number; id: number } | null>(null);
-  const [showBubble, setShowBubble] = useState<boolean>(false);
   const [noButtonText, setNoButtonText] = useState<string>(INITIAL_NO_TEXT);
 
   // Bolsa de barajado aleatorio (Shuffle Bag)
@@ -39,7 +34,6 @@ export function useButtonEvasion(sessionId: string) {
   const actionContainerRef = useRef<HTMLDivElement | null>(null);
   const footerRef = useRef<HTMLDivElement | null>(null);
   const isEvadingCooldown = useRef<boolean>(false);
-  const bubbleTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Bloqueo de scroll en móvil mientras este paso esté activo
   useEffect(() => {
@@ -52,7 +46,6 @@ export function useButtonEvasion(sessionId: string) {
     return () => {
       document.body.style.overflow = originalOverflow;
       document.body.style.touchAction = originalTouchAction;
-      if (bubbleTimerRef.current) clearTimeout(bubbleTimerRef.current);
     };
   }, []);
 
@@ -75,6 +68,26 @@ export function useButtonEvasion(sessionId: string) {
       isEvadingCooldown.current = false;
     }, 450);
 
+    // Micro-vibración háptica al escapar (exclusiva para toques en dispositivos móviles)
+    const eventType = (e as unknown as { type?: string })?.type;
+    const pointerType = (e as unknown as { pointerType?: string })?.pointerType;
+    const isTouch =
+      eventType === 'touchstart' ||
+      eventType === 'touchend' ||
+      pointerType === 'touch';
+
+    const hasActivation =
+      typeof navigator !== 'undefined' &&
+      (!('userActivation' in navigator) || (navigator as unknown as { userActivation?: { hasBeenActive?: boolean } }).userActivation?.hasBeenActive);
+
+    if (isTouch && hasActivation && typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+      try {
+        navigator.vibrate([20, 35, 20]);
+      } catch {
+        // Silenciar de forma segura cualquier restricción de política del navegador
+      }
+    }
+
     // 3. Capturar coordenadas del botón para el efecto de humo
     const btn = noButtonRef.current;
     const btnRect = btn?.getBoundingClientRect();
@@ -90,13 +103,6 @@ export function useButtonEvasion(sessionId: string) {
       id: Date.now(),
     });
 
-    // Bocadillo cómico activo durante 2 segundos
-    setShowBubble(true);
-    if (bubbleTimerRef.current) clearTimeout(bubbleTimerRef.current);
-    bubbleTimerRef.current = setTimeout(() => {
-      setShowBubble(false);
-    }, 1500);
-
     // 4. Zonas basadas en la posición real de los componentes
     const safeM = 14;
     const viewportW = window.innerWidth;
@@ -107,46 +113,110 @@ export function useButtonEvasion(sessionId: string) {
     const minY = 24;
     const maxY = Math.max(minY, viewportH - btnHeight - safeM);
 
-    // Leer la posición real del botón SÍ
+    // Leer la posición real de los elementos a evitar
     const yesRect = yesButtonRef.current?.getBoundingClientRect();
+    const textEl = typeof document !== 'undefined' ? document.getElementById('proposal-header-texts') : null;
+    const textRect = textEl?.getBoundingClientRect();
 
-    // Límites verticales
+    // Límites verticales de referencia
     const yesTop = yesRect ? yesRect.top : viewportH * 0.45;
     const yesBottom = yesRect ? yesRect.bottom : viewportH * 0.55;
-
-    // Espacios disponibles arriba y abajo del botón SÍ
-    const aboveAvailable = yesTop - minY - btnHeight - 15;
     const belowAvailable = maxY - (yesBottom + 10);
 
-    // Obstáculo: solo el botón SÍ para dejar libre toda el área de arriba y abajo
+    // Obstáculo: NUNCA superponer el área de los textos del encabezado ni el botón SÍ
     const checkCollision = (cx: number, cy: number) => {
-      if (!yesRect) return false;
-      const b = { left: cx, right: cx + estimatedBtnW, top: cy - 10, bottom: cy + btnHeight + 10 };
+      const bLeft = cx - 8;
+      const bRight = cx + estimatedBtnW + 8;
+      const bTop = cy - 8;
+      const bBottom = cy + btnHeight + 8;
 
-      return (
-        b.left < yesRect.right + 8 &&
-        b.right > yesRect.left - 8 &&
-        b.top < yesRect.bottom + 10 &&
-        b.bottom > yesRect.top - 15
-      );
+      // 1. Verificación estricta: NO tapar los textos del título/subtítulo
+      if (textRect) {
+        const collidesWithText =
+          bLeft < textRect.right + 10 &&
+          bRight > textRect.left - 10 &&
+          bTop < textRect.bottom + 12 &&
+          bBottom > textRect.top - 12;
+
+        if (collidesWithText) return true;
+      }
+
+      // 2. No tapar el botón SÍ
+      if (yesRect) {
+        const collidesWithYes =
+          bLeft < yesRect.right + 8 &&
+          bRight > yesRect.left - 8 &&
+          bTop < yesRect.bottom + 10 &&
+          bBottom > yesRect.top - 14;
+
+        if (collidesWithYes) return true;
+      }
+
+      return false;
     };
 
-    // Construir zonas libres: ARRIBA y ABAJO del botón verde
+    // Construir zonas libres válidas
     type Zone = { minX: number; maxX: number; minY: number; maxY: number };
     const zones: Zone[] = [];
 
-    if (aboveAvailable > 20) {
-      zones.push({ minX, maxX, minY, maxY: yesTop - btnHeight - 15 });
+    // Zona A: Arriba del texto (si hay espacio suficiente sobre el título/avatar)
+    if (textRect && textRect.top - minY > btnHeight + 25) {
+      zones.push({
+        minX,
+        maxX,
+        minY,
+        maxY: textRect.top - btnHeight - 20,
+      });
     }
+
+    // Zona B: Entre los textos y el botón SÍ (si hay espacio suficiente)
+    if (textRect && yesTop - textRect.bottom > btnHeight + 25) {
+      zones.push({
+        minX,
+        maxX,
+        minY: textRect.bottom + 15,
+        maxY: yesTop - btnHeight - 15,
+      });
+    }
+
+    // Zona C: Debajo del botón SÍ (área inferior de la pantalla hacia el footer)
     if (belowAvailable > 20) {
-      zones.push({ minX, maxX, minY: yesBottom + 10, maxY });
+      zones.push({
+        minX,
+        maxX,
+        minY: yesBottom + 12,
+        maxY,
+      });
     }
 
+    // Zonas laterales D y E: si la pantalla es ancha (por ejemplo en PC, tablet o landscape)
+    const centerLeft = Math.min(textRect ? textRect.left : viewportW, yesRect ? yesRect.left : viewportW);
+    const centerRight = Math.max(textRect ? textRect.right : 0, yesRect ? yesRect.right : 0);
+
+    if (centerLeft - minX > estimatedBtnW + 20) {
+      zones.push({
+        minX,
+        maxX: centerLeft - estimatedBtnW - 12,
+        minY,
+        maxY,
+      });
+    }
+
+    if (maxX - centerRight > 20) {
+      zones.push({
+        minX: centerRight + 12,
+        maxX,
+        minY,
+        maxY,
+      });
+    }
+
+    // Fallback de seguridad si ninguna zona calculada tuviese espacio
     if (zones.length === 0) {
-      zones.push({ minX, maxX, minY, maxY });
+      zones.push({ minX, maxX, minY: Math.max(minY, yesBottom + 10), maxY });
     }
 
-    // Barajar para que arriba y abajo tengan igual probabilidad
+    // Barajar zonas para distribución variada y dinámica
     const shuffled = [...zones].sort(() => Math.random() - 0.5);
 
     let bestX = minX;
@@ -154,9 +224,9 @@ export function useButtonEvasion(sessionId: string) {
     let found = false;
 
     for (const zone of shuffled) {
-      for (let i = 0; i < 20; i++) {
-        const cx = zone.minX + Math.random() * (zone.maxX - zone.minX);
-        const cy = zone.minY + Math.random() * (zone.maxY - zone.minY);
+      for (let i = 0; i < 25; i++) {
+        const cx = zone.minX + Math.random() * Math.max(0, zone.maxX - zone.minX);
+        const cy = zone.minY + Math.random() * Math.max(0, zone.maxY - zone.minY);
         if (!checkCollision(cx, cy)) {
           bestX = cx;
           bestY = cy;
@@ -167,25 +237,16 @@ export function useButtonEvasion(sessionId: string) {
       if (found) break;
     }
 
+    // Si por alguna razón aleatoria falló, ubicarlo abajo con seguridad
     if (!found) {
-      bestX = minX + Math.random() * (maxX - minX);
-      bestY = maxY;
+      bestX = minX + Math.random() * Math.max(0, maxX - minX);
+      bestY = Math.min(maxY, yesBottom + 18);
     }
-
-    // Alineación horizontal adaptativa: si está a la derecha, el taunt aparece a la izquierda
-    const isNearRight = bestX > (viewportW - estimatedBtnW - 60) || bestX > viewportW * 0.46;
-    const isNearLeft = bestX < safeM + 50 || bestX < viewportW * 0.2;
-    const tauntAlign: 'left' | 'center' | 'right' = isNearRight ? 'left' : isNearLeft ? 'right' : 'center';
-
-    // Alineación vertical adaptativa: si está muy arriba, el taunt aparece abajo
-    const tauntVAlign: 'top' | 'bottom' = bestY < 75 ? 'bottom' : 'top';
 
     setNoPosition({
       x: Math.round(bestX),
       y: Math.round(bestY),
       isEvading: true,
-      tauntAlign,
-      tauntVAlign,
     });
 
     // Ciclar frases aleatorias asegurando que se usen TODAS antes de repetir (Shuffle Bag)
@@ -225,7 +286,6 @@ export function useButtonEvasion(sessionId: string) {
     noPosition,
     poof,
     setPoof,
-    showBubble,
     noButtonText,
     noButtonRef,
     yesButtonRef,

@@ -51,24 +51,27 @@ const ProposalHeader = forwardRef<HTMLDivElement, ProposalHeaderProps>(
           </div>
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.h1
-            key={getHeaderMessage(attempts, nickname, fullName)}
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
-            transition={{ duration: 0.2 }}
-            className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight mt-3 text-balance leading-tight"
-          >
-            {getHeaderMessage(attempts, nickname, fullName)}
-          </motion.h1>
-        </AnimatePresence>
+        {/* Contenedor específico de textos (título y subtítulo) - Zona de exclusión para el botón No */}
+        <div id="proposal-header-texts" className="w-full flex flex-col items-center">
+          <AnimatePresence mode="wait">
+            <motion.h1
+              key={getHeaderMessage(attempts, nickname, fullName)}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -5 }}
+              transition={{ duration: 0.2 }}
+              className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight mt-3 text-balance leading-tight"
+            >
+              {getHeaderMessage(attempts, nickname, fullName)}
+            </motion.h1>
+          </AnimatePresence>
 
-        <p className="text-sm text-gray-600 mt-2 max-w-xs font-medium">
-          {attempts === 0
-            ? 'La idea es pasarla bien, comer algo rico y charlar un rato ✨'
-            : 'La perseverancia es una de mis virtudes, ¿se nota? 😌'}
-        </p>
+          <p className="text-sm text-gray-600 mt-2 max-w-xs font-medium">
+            {attempts === 0
+              ? 'La idea es pasarla bien, comer algo rico y charlar un rato ✨'
+              : 'La perseverancia es una de mis virtudes, ¿se nota? 😌'}
+          </p>
+        </div>
       </motion.div>
     );
   }

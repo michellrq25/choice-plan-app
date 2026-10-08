@@ -2,18 +2,6 @@
  * Constantes y funciones de utilidad de texto para el paso de propuesta (ProposalStep)
  */
 
-export const ESCAPE_TAUNTS: readonly string[] = [
-  '¡Ups! 💨',
-  '¡Muy lento! ⚡',
-  '¡Casi! 😜',
-  '¡Por aquí! 🏃‍♂️',
-  '¿Tan rápido te rindes? 😏',
-  '¡Ese dedo no colabora! ☝️😂',
-  '¡El botón tiene vida propia! 🏃',
-  '¡Acepta y te ahorro la fatiga! 😌',
-  '¡Misión imposible! 🚀'
-];
-
 export const NO_BUTTON_TEXTS: readonly string[] = [
   'No, gracias 😅',
   'Paso esta vez 🙈',
@@ -41,13 +29,7 @@ export const shuffleArray = <T,>(array: readonly T[]): T[] => {
   return arr;
 };
 
-/**
- * Retorna el taunt correspondiente al conteo de intentos de escape
- */
-export const getEscapeTaunt = (count: number): string => {
-  const index = Math.min(count - 1, ESCAPE_TAUNTS.length - 1);
-  return ESCAPE_TAUNTS[Math.max(0, index)];
-};
+
 
 export const getHeaderMessage = (
   attempts: number,

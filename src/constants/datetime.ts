@@ -17,4 +17,4 @@ export const QUICK_TIMES: readonly QuickTimeOption[] = [
 ];
 
 export const DEFAULT_TIME = '8:30 PM';
-export const DEFAULT_PICKUP_LOCATION = 'Mi casa';
+export const DEFAULT_PICKUP_LOCATION = 'Paso por tu casa';

@@ -8,6 +8,7 @@ import { formatReadableDate } from '@/lib/dateUtils';
 interface AestheticCalendarProps {
   selectedDateISO: string; // 'YYYY-MM-DD'
   onSelectDateISO: (isoDate: string) => void;
+  onValidDateConfirmed?: (isoDate: string) => void;
 }
 
 const MONTH_NAMES = [
@@ -30,6 +31,7 @@ const MAX_DAYS_AHEAD = 30;
 export default function AestheticCalendar({
   selectedDateISO,
   onSelectDateISO,
+  onValidDateConfirmed,
 }: AestheticCalendarProps) {
   const today = useMemo(() => {
     const now = new Date();
@@ -172,6 +174,12 @@ export default function AestheticCalendar({
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setFunnyNotice(null);
     onSelectDateISO(cell.isoString);
+
+    if (onValidDateConfirmed) {
+      setTimeout(() => {
+        onValidDateConfirmed(cell.isoString);
+      }, 350);
+    }
   };
 
   const readableSelected = selectedDateISO ? formatReadableDate(selectedDateISO) : '';
