@@ -12,7 +12,7 @@ export const NO_BUTTON_TEXTS: readonly string[] = [
   '¿Y si no quiero? 🤭',
   'No me convences 😜',
   'Toy chiquita 🥺',
-  'Pregúntale a mi Draco 🐶'
+  'Pregúntale a mi Dracko 🐶'
 ];
 
 export const INITIAL_NO_TEXT: string = NO_BUTTON_TEXTS[0]; // 'No, gracias 😅'
