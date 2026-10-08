@@ -5,7 +5,7 @@ import { notifyMeetingCoordinated } from '@/lib/telegram';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { sessionId, date, time, location, name } = body;
+    const { sessionId, date, time, location, name, foods, attempts } = body;
 
     if (!sessionId || !date || !time) {
       return NextResponse.json(
@@ -14,9 +14,11 @@ export async function POST(request: Request) {
       );
     }
 
-    const session = store.recordMeeting(sessionId, { date, time, location });
+    const session = store.recordMeeting(sessionId, { date, time, location, foods, attempts });
 
-    void notifyMeetingCoordinated(session, name);
+    await notifyMeetingCoordinated(session, name).catch((err) =>
+      console.error('[API Meeting] Telegram notification error:', err)
+    );
 
     return NextResponse.json({
       success: true,

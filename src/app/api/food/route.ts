@@ -16,7 +16,9 @@ export async function POST(request: Request) {
 
     const session = store.recordFoods(sessionId, foods);
 
-    void notifyFoodsConfirmed(session.selectedFoods, name);
+    await notifyFoodsConfirmed(session.selectedFoods, name).catch((err) =>
+      console.error('[API Food] Telegram notification error:', err)
+    );
 
     return NextResponse.json({
       success: true,

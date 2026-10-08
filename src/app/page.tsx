@@ -140,6 +140,8 @@ function MainContent() {
             <DateTimePickerStep
               sessionId={sessionId}
               nickname={nickname}
+              selectedFoods={selectedFoods}
+              attempts={attempts}
               onConfirmed={handleDateTimeConfirmed}
             />
           </motion.div>

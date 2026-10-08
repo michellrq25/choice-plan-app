@@ -10,7 +10,7 @@ export async function sendTelegramMessage(text: string): Promise<boolean> {
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
   if (!token || !chatId) {
-    // No credentials configured yet; silently skip without throwing
+    console.warn('[Telegram] ⚠️ No se enviará notificación: TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID no están configurados en las variables de entorno.');
     return false;
   }
 

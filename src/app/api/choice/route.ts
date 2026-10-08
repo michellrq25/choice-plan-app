@@ -17,7 +17,9 @@ export async function POST(request: Request) {
     const session = store.recordChoice(sessionId, choice);
 
     if (choice === 'yes') {
-      void notifyProposalAccepted(session.attemptsCount, name);
+      await notifyProposalAccepted(session.attemptsCount, name).catch((err) =>
+        console.error('[API Choice] Telegram notification error:', err)
+      );
     }
 
     return NextResponse.json({

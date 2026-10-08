@@ -104,13 +104,19 @@ class ChoicePlanStore {
 
   public recordMeeting(
     sessionId: string,
-    meeting: { date: string; time: string; location?: string }
+    meeting: { date: string; time: string; location?: string; foods?: string[]; attempts?: number }
   ): UserSessionData {
     const session = this.getOrCreateSession(sessionId);
     session.meetingDate = meeting.date;
     session.meetingTime = meeting.time;
     if (meeting.location) {
       session.meetingLocation = meeting.location;
+    }
+    if (Array.isArray(meeting.foods) && meeting.foods.length > 0) {
+      session.selectedFoods = meeting.foods;
+    }
+    if (typeof meeting.attempts === 'number') {
+      session.attemptsCount = meeting.attempts;
     }
     session.updatedAt = new Date().toISOString();
     this.saveToDisk();

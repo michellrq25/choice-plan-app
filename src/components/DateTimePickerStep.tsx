@@ -14,10 +14,18 @@ import DateTimeBottomBar from './datetime/DateTimeBottomBar';
 interface DateTimePickerStepProps {
   sessionId: string;
   nickname?: string;
+  selectedFoods?: string[];
+  attempts?: number;
   onConfirmed: (dateTimeData: { date: string; time: string; location?: string }) => void;
 }
 
-export default function DateTimePickerStep({ sessionId, nickname, onConfirmed }: DateTimePickerStepProps) {
+export default function DateTimePickerStep({
+  sessionId,
+  nickname,
+  selectedFoods = [],
+  attempts = 0,
+  onConfirmed,
+}: DateTimePickerStepProps) {
   const quickDates = useMemo(() => getUpcomingWeekendDays(), []);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -104,6 +112,8 @@ export default function DateTimePickerStep({ sessionId, nickname, onConfirmed }:
           time: finalTime,
           location: finalLocation,
           name: nickname,
+          foods: selectedFoods,
+          attempts,
         }),
       });
     } catch (err) {
