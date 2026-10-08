@@ -65,7 +65,6 @@ export default function LocationSection({
             <div className="flex items-center gap-1.5">
               <input
                 type="text"
-                autoFocus
                 placeholder="¿Dónde paso por ti? (ej. Un café, parque, trabajo...)"
                 value={customLocation}
                 onChange={(e) => onCustomLocationChange(e.target.value)}

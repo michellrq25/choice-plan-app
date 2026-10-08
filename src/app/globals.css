@@ -12,7 +12,7 @@ html, body {
   width: 100%;
   min-height: 100%;
   font-family: var(--font-sans);
-  background: linear-gradient(135deg, #faf7f5 0%, #fdf2f0 50%, #f7f0eb 100%);
+  background: radial-gradient(circle at 50% 10%, #fff8f6 0%, #fff1f2 45%, #fdf2f0 85%, #faf3ee 100%);
   color: #1f2937;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
