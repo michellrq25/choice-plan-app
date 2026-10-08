@@ -46,11 +46,10 @@ export default function DateSection({
           onClick={() => {
             if (isCustomDate) onToggleCustomDate();
           }}
-          className={`py-1 px-2 rounded-md text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all ${
-            !isCustomDate
+          className={`py-1 px-2 rounded-md text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all ${!isCustomDate
               ? 'bg-white text-rose-700 shadow-2xs border border-rose-200/80'
               : 'text-gray-500 hover:text-gray-800'
-          }`}
+            }`}
         >
           <Sparkles className="w-3 h-3 text-rose-500" />
           <span>Fin de semana</span>
@@ -61,14 +60,13 @@ export default function DateSection({
           onClick={() => {
             if (!isCustomDate) onToggleCustomDate();
           }}
-          className={`py-1 px-2 rounded-md text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all ${
-            isCustomDate
+          className={`py-1 px-2 rounded-md text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all ${isCustomDate
               ? 'bg-white text-rose-700 shadow-2xs border border-rose-200/80 ring-1 ring-rose-300/40'
               : 'text-rose-600 hover:text-rose-800 font-extrabold'
-          }`}
+            }`}
         >
           <Calendar className="w-3.5 h-3.5 text-rose-500" />
-          <span>Calendario</span>
+          <span>Otra fecha</span>
         </button>
       </div>
 
@@ -76,31 +74,29 @@ export default function DateSection({
       {!isCustomDate && (
         <div>
           <div className="grid grid-cols-3 gap-1.5">
-          {quickDates.map((d) => {
-            const isSelected = !isCustomDate && selectedDate === d.fullDate;
-            return (
-              <button
-                key={d.id}
-                type="button"
-                onClick={() => onSelectQuickDate(d.fullDate)}
-                className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-xl border transition-all active:scale-95 ${
-                  isSelected
-                    ? 'bg-rose-50/80 border-rose-500 text-rose-700 font-bold shadow-xs'
-                    : 'bg-white border-gray-150 text-gray-700 hover:border-rose-200 font-medium'
-                }`}
-              >
-                <span className="text-xl leading-tight mb-0.5">{d.emoji}</span>
-                <span className="text-xs font-extrabold leading-tight">{d.dayName}</span>
-                <span
-                  className={`text-[11px] font-black leading-tight mt-0.5 ${
-                    isSelected ? 'text-rose-600' : 'text-gray-500'
-                  }`}
+            {quickDates.map((d) => {
+              const isSelected = !isCustomDate && selectedDate === d.fullDate;
+              return (
+                <button
+                  key={d.id}
+                  type="button"
+                  onClick={() => onSelectQuickDate(d.fullDate)}
+                  className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-xl border transition-all active:scale-95 ${isSelected
+                      ? 'bg-rose-50/80 border-rose-500 text-rose-700 font-bold shadow-xs'
+                      : 'bg-white border-gray-150 text-gray-700 hover:border-rose-200 font-medium'
+                    }`}
                 >
-                  {d.shortDate}
-                </span>
-              </button>
-            );
-          })}
+                  <span className="text-xl leading-tight mb-0.5">{d.emoji}</span>
+                  <span className="text-xs font-extrabold leading-tight">{d.dayName}</span>
+                  <span
+                    className={`text-[11px] font-black leading-tight mt-0.5 ${isSelected ? 'text-rose-600' : 'text-gray-500'
+                      }`}
+                  >
+                    {d.shortDate}
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
           {/* Si eligió una fecha del calendario fuera del fin de semana inmediato */}
